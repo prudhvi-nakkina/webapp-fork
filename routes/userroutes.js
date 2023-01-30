@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { createUser, checkHealth, getUser } = require('../controllers/usercontroller');
+const { createUser, checkHealth, getUser, updateUser } = require('../controllers/usercontroller');
 
 const router = express.Router();
 
@@ -15,6 +15,6 @@ router
 router
     .route('/v1/user/:id')
     .get(getUser)
-    .put();
+    .put(updateUser);
 
 module.exports = router;
