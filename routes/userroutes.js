@@ -1,12 +1,12 @@
 const express = require('express');
 
-const { createUser } = require('../controllers/usercontroller');
+const { createUser, checkHealth, getUser } = require('../controllers/usercontroller');
 
 const router = express.Router();
 
 router
     .route('/healthz')
-    .get();
+    .get(checkHealth);
 
 router
     .route('/v1/user')
@@ -14,7 +14,7 @@ router
 
 router
     .route('/v1/user/:id')
-    .get()
+    .get(getUser)
     .put();
 
 module.exports = router;
