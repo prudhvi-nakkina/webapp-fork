@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha",
-    "dev": "nodemon server"
+    "start": "node listener.js"
   },
   "repository": {
     "type": "git",
