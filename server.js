@@ -13,4 +13,6 @@ app.use('/', routes);
 // make sure its after routes
 app.use(errorhandler);
 
-const server = app.listen(5000);
+app.listen(5000);
+
+module.exports = app;

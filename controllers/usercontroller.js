@@ -14,29 +14,36 @@ exports.createUser = asyncHandler(async (req, res, next) => {
             if (user) {
                 return next(new ErrorResponse('User already exists!', 400));
             } else {
-                bcrypt.genSalt(10, (err, salt) => {
-                    bcrypt.hash(req.body.password, salt, async (err, hash) => {
-                        req.body.password = hash;
-                        const user = await usermodel.create(req.body);
+                let emailFormat = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+                if (req.body.username !== '' && req.body.username.match(emailFormat)) {
+                    bcrypt.genSalt(10, (err, salt) => {
+                        bcrypt.hash(req.body.password, salt, async (err, hash) => {
+                            req.body.password = hash;
+                            const user = await usermodel.create(req.body);
 
-                        res.status(201).json({
-                            success: true,
-                            data: {
-                                id: user.id,
-                                first_name: user.first_name,
-                                last_name: user.last_name,
-                                username: user.username,
-                                account_created: user.createdAt,
-                                account_updated: user.updatedAt
-                            }
+                            res.status(201).json({
+                                success: true,
+                                data: {
+                                    id: user.id,
+                                    first_name: user.first_name,
+                                    last_name: user.last_name,
+                                    username: user.username,
+                                    account_created: user.createdAt,
+                                    account_updated: user.updatedAt
+                                }
+                            });
                         });
                     });
-                });
+                } else {
+                    return next(new ErrorResponse('username should be a valid email', 400));
+                }
             }
         }
-    ).catch(err => {
-        return next(new ErrorResponse('Error in user creation!', 400));
-    })
+    ).catch(
+        err => {
+            return next(new ErrorResponse('Error in user creation, please re-check all the fields!', 400));
+        }
+    )
 });
 
 // @desc    health check
@@ -88,19 +95,19 @@ exports.getUser = asyncHandler(async (req, res, next) => {
                                 })
                             })
                         } else {
-                            return next(new ErrorResponse('User  authentication failed', 400));
+                            return next(new ErrorResponse('User authentication failed, wrong password', 401));
                         }
                     })
                     .catch(err => {
-                        return next(new ErrorResponse('User password matching failed', 400));
+                        return next(new ErrorResponse('User authentication failed, please try again later', 400));
                     }
                     )
             } else {
-                return next(new ErrorResponse('User cannot access other user info', 400));
+                return next(new ErrorResponse('User cannot access other user info', 403));
             }
         }
     ).catch(err => {
-        return next(new ErrorResponse('auth creds dont exist in DB', 400));
+        return next(new ErrorResponse('User authentication failed, please try again later', 400));
     });
 
 })
@@ -112,7 +119,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
     let authenticateHeader = req.headers.authorization;
 
     if (!authenticateHeader) {
-        return next(new ErrorResponse('User should provide authentication', 400));
+        return next(new ErrorResponse('User should provide authentication', 401));
     }
 
     let auth = new Buffer.from(authenticateHeader.split(' ')[1],
@@ -147,20 +154,20 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
                                     });
                                 });
                             } else {
-                                return next(new ErrorResponse('User  authentication failed', 400));
+                                return next(new ErrorResponse('User authentication failed, wrong password', 401));
                             }
                         }
                         ).catch(err => {
-                            return next(new ErrorResponse('User password matching failed', 400));
+                            return next(new ErrorResponse('User authentication failed, please try again later', 400));
                         });
                 } else {
                     return next(new ErrorResponse('User cannot update username', 400));
                 }
             } else {
-                return next(new ErrorResponse('User cannot access other user info', 400));
+                return next(new ErrorResponse('User cannot access other user info', 403));
             }
         }).catch(err => {
-            return next(new ErrorResponse('auth creds dont exist in DB', 400));
+            return next(new ErrorResponse('User authentication failed, please try again later', 400));
         });
 
 });

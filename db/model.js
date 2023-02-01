@@ -7,6 +7,10 @@ const sequelize = new Sequelize(
     {
         host: '127.0.0.1',
         dialect: 'mysql'
+        // dialectOptions: {
+        //     useUTC: false // for reading from database
+        // },
+        // timezone: '-05:00', // for writing to database
     }
 );
 
