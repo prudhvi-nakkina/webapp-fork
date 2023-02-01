@@ -46,18 +46,6 @@ exports.createUser = asyncHandler(async (req, res, next) => {
     )
 });
 
-// @desc    health check
-// @route   GET /healthz
-// @access  Private
-exports.checkHealth = asyncHandler((req, res, next) => {
-
-    res.status(200).json({
-        success: true,
-        data: null
-    });
-
-});
-
 // @desc    get user
 // @route   GET /v1/user/:id
 // @access  Private

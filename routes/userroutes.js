@@ -1,7 +1,7 @@
 const express = require('express');
 
-const { createUser, checkHealth, getUser, updateUser } = require('../controllers/usercontroller');
-
+const { createUser, getUser, updateUser } = require('../controllers/usercontroller');
+const { checkHealth } = require('../controllers/healthcontroller');
 const router = express.Router();
 
 router

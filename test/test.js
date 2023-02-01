@@ -2,19 +2,13 @@ let request = require('supertest');
 let expect = require("chai").expect;
 let server = require('../server');
 
-describe('/POST user', function () {
+describe('/GET health check', function () {
 
-    it('it should not POST a user with invalid username', async function () {
-        let user = {
-            first_name: "test user",
-            last_name: "user test",
-            username: "testusername",
-            password: "testpassword"
-        }
+    it('it should return 200 ok response', async function () {
 
-        const response = await request(server).post("/v1/user").send(user);
+        const response = await request(server).get("/healthz");
 
-        expect(response.status).to.eql(400);
-        expect(response.body.success).to.eql(false);
+        expect(response.status).to.eql(200);
+        expect(response.body.success).to.eql(true);
     });
 });
