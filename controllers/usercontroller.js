@@ -9,41 +9,45 @@ const ErrorResponse = require('../util/errorResponse');
 exports.createUser = asyncHandler(async (req, res, next) => {
 
     // check if existing user, if email exists send 400
-    usermodel.findOne({ where: { username: req.body.username } }).then(
-        user => {
-            if (user) {
-                return next(new ErrorResponse('User already exists!', 400));
-            } else {
-                let emailFormat = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-                if (req.body.username !== '' && req.body.username.match(emailFormat)) {
-                    bcrypt.genSalt(10, (err, salt) => {
-                        bcrypt.hash(req.body.password, salt, async (err, hash) => {
-                            req.body.password = hash;
-                            const user = await usermodel.create(req.body);
+    if (!(req.body.first_name === null || req.body.username === null || req.body.last_name === null || req.body.password === null)) {
+        usermodel.findOne({ where: { username: req.body.username } }).then(
+            user => {
+                if (user) {
+                    return next(new ErrorResponse('User already exists!', 400));
+                } else {
+                    let emailFormat = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+                    if (req.body.username !== '' && req.body.username.match(emailFormat)) {
+                        bcrypt.genSalt(10, (err, salt) => {
+                            bcrypt.hash(req.body.password, salt, async (err, hash) => {
+                                req.body.password = hash;
+                                const user = await usermodel.create(req.body);
 
-                            res.status(201).json({
-                                success: true,
-                                data: {
-                                    id: user.id,
-                                    first_name: user.first_name,
-                                    last_name: user.last_name,
-                                    username: user.username,
-                                    account_created: user.createdAt,
-                                    account_updated: user.updatedAt
-                                }
+                                res.status(201).json({
+                                    success: true,
+                                    data: {
+                                        id: user.id,
+                                        first_name: user.first_name,
+                                        last_name: user.last_name,
+                                        username: user.username,
+                                        account_created: user.createdAt,
+                                        account_updated: user.updatedAt
+                                    }
+                                });
                             });
                         });
-                    });
-                } else {
-                    return next(new ErrorResponse('username should be a valid email', 400));
+                    } else {
+                        return next(new ErrorResponse('username should be a valid email', 400));
+                    }
                 }
             }
-        }
-    ).catch(
-        err => {
-            return next(new ErrorResponse('Error in user creation, please re-check all the fields!', 400));
-        }
-    )
+        ).catch(
+            err => {
+                return next(new ErrorResponse('Error in user creation, please re-check all the fields!', 400));
+            }
+        )
+    } else {
+        return next(new ErrorResponse('Error in user creation, please re-check all the fields!', 400));
+    }
 });
 
 // @desc    get user
@@ -118,36 +122,40 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
     usermodel.findOne({ where: { username: username } }).then(
         user => {
             if (user.id == req.params.id) {
-                if (req.body.first_name || req.body.last_name || req.body.password) {
-                    if ((req.body.username != null && username == req.body.username) || (req.body.username == null)) {
-                        bcrypt.compare(password, user.password)
-                            .then(flag => {
-                                if (flag) {
-                                    bcrypt.genSalt(10, (err, salt) => {
-                                        bcrypt.hash(req.body.password, salt, async (err, hash) => {
-                                            req.body.password = hash;
+                if (!(req.body.first_name === null || req.body.last_name === null || req.body.password === null)) {
+                    if (req.body.first_name || req.body.last_name || req.body.password) {
+                        if ((req.body.username != null && username == req.body.username) || (req.body.username == null)) {
+                            bcrypt.compare(password, user.password)
+                                .then(flag => {
+                                    if (flag) {
+                                        bcrypt.genSalt(10, (err, salt) => {
+                                            bcrypt.hash(req.body.password, salt, async (err, hash) => {
+                                                req.body.password = hash;
 
-                                            const rowsUpdated = await usermodel.update(
-                                                req.body
-                                                , { returning: true, where: { id: req.params.id } }
-                                            );
+                                                const rowsUpdated = await usermodel.update(
+                                                    req.body
+                                                    , { returning: true, where: { id: req.params.id } }
+                                                );
 
-                                            if (rowsUpdated) {
-                                                res.status(204).json({
-                                                    success: true
-                                                });
-                                            }
+                                                if (rowsUpdated) {
+                                                    res.status(204).json({
+                                                        success: true
+                                                    });
+                                                }
+                                            });
                                         });
-                                    });
-                                } else {
-                                    return next(new ErrorResponse('User authentication failed, wrong password', 401));
+                                    } else {
+                                        return next(new ErrorResponse('User authentication failed, wrong password', 401));
+                                    }
                                 }
-                            }
-                            ).catch(err => {
-                                return next(new ErrorResponse('User authentication failed, please try again later', 401));
-                            });
+                                ).catch(err => {
+                                    return next(new ErrorResponse('User authentication failed, please try again later', 401));
+                                });
+                        } else {
+                            return next(new ErrorResponse('User cannot update username', 400));
+                        }
                     } else {
-                        return next(new ErrorResponse('User cannot update username', 400));
+                        return next(new ErrorResponse('User update failed, please re-check all the fields', 400));
                     }
                 } else {
                     return next(new ErrorResponse('User update failed, please re-check all the fields', 400));
