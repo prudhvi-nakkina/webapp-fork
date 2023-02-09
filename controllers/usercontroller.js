@@ -1,5 +1,5 @@
 const asyncHandler = require('../middleware/async');
-const usermodel = require('../db/model');
+const { User } = require('../db/model');
 const bcrypt = require("bcrypt");
 const ErrorResponse = require('../util/errorResponse');
 
@@ -10,7 +10,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
 
     // check if existing user, if email exists send 400
     if (!(req.body.first_name === null || req.body.username === null || req.body.last_name === null || req.body.password === null)) {
-        usermodel.findOne({ where: { username: req.body.username } }).then(
+        User.findOne({ where: { username: req.body.username } }).then(
             user => {
                 if (user) {
                     return next(new ErrorResponse('User already exists!', 400));
@@ -20,19 +20,17 @@ exports.createUser = asyncHandler(async (req, res, next) => {
                         bcrypt.genSalt(10, (err, salt) => {
                             bcrypt.hash(req.body.password, salt, async (err, hash) => {
                                 req.body.password = hash;
-                                const user = await usermodel.create(req.body);
+                                const user = await User.create(req.body);
 
                                 res.status(201).json({
-                                    success: true,
-                                    data: {
-                                        id: user.id,
-                                        first_name: user.first_name,
-                                        last_name: user.last_name,
-                                        username: user.username,
-                                        account_created: user.createdAt,
-                                        account_updated: user.updatedAt
-                                    }
-                                });
+                                    id: user.id,
+                                    first_name: user.first_name,
+                                    last_name: user.last_name,
+                                    username: user.username,
+                                    account_created: user.createdAt,
+                                    account_updated: user.updatedAt
+                                }
+                                );
                             });
                         });
                     } else {
@@ -66,24 +64,21 @@ exports.getUser = asyncHandler(async (req, res, next) => {
     let username = auth[0];
     let password = auth[1];
 
-    usermodel.findOne({ where: { username: username } }).then(
+    User.findOne({ where: { username: username } }).then(
         user => {
             if (user.id == req.params.id) {
                 bcrypt.compare(password, user.password)
                     .then(flag => {
                         if (flag) {
-                            usermodel.findByPk(req.params.id).then(user => {
+                            User.findByPk(req.params.id).then(user => {
 
                                 res.status(200).json({
-                                    success: true,
-                                    data: {
-                                        id: user.id,
-                                        first_name: user.first_name,
-                                        last_name: user.last_name,
-                                        username: user.username,
-                                        account_created: user.createdAt,
-                                        account_updated: user.updatedAt
-                                    }
+                                    id: user.id,
+                                    first_name: user.first_name,
+                                    last_name: user.last_name,
+                                    username: user.username,
+                                    account_created: user.createdAt,
+                                    account_updated: user.updatedAt
                                 })
                             })
                         } else {
@@ -119,7 +114,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
     let username = auth[0];
     let password = auth[1];
 
-    usermodel.findOne({ where: { username: username } }).then(
+    User.findOne({ where: { username: username } }).then(
         user => {
             if (user.id == req.params.id) {
                 if (!(req.body.first_name === null || req.body.last_name === null || req.body.password === null)) {
@@ -132,7 +127,7 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
                                             bcrypt.hash(req.body.password, salt, async (err, hash) => {
                                                 req.body.password = hash;
 
-                                                const rowsUpdated = await usermodel.update(
+                                                const rowsUpdated = await User.update(
                                                     req.body
                                                     , { returning: true, where: { id: req.params.id } }
                                                 );
