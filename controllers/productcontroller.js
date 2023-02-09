@@ -137,7 +137,7 @@ exports.updateProduct = async (req, res, next) => {
 
         User.findOne({ where: { username: username } }).then(
             user => {
-                if (!(req.body.name === null || req.body.description === null || req.body.sku === null || req.body.manufacturer === null || req.body.quantity === null) && (req.body.quantity && typeof (req.body.quantity) === "number")) {
+                if (!(req.body.name === null || req.body.description === null || req.body.sku === null || req.body.manufacturer === null || req.body.quantity === null)) {
                     if (req.body.name || req.body.description || req.body.sku || req.body.manufacturer || req.body.quantity) {
                         if (!(req.body.date_added || req.body.date_last_updated || req.body.owner_user_id)) {
                             bcrypt.compare(password, user.password).then(
@@ -147,9 +147,19 @@ exports.updateProduct = async (req, res, next) => {
                                             p => {
                                                 if (p && user.id == p.owner_user_id) {
                                                     if ((req.body.owner_user_id && p.owner_user_id !== req.body.owner_user_id) || !req.body.owner_user_id) {
-                                                        req.body.date_last_updated = new Date().toLocaleString();
+                                                        const pro = {
+                                                            ...(req.body.name) && { name: req.body.name },
+                                                            ...(req.body.description) && { description: req.body.description },
+                                                            ...(req.body.sku) && { sku: req.body.sku },
+                                                            ...(req.body.manufacturer) && { manufacturer: req.body.manufacturer },
+                                                            ...(req.body.quantity && typeof (req.body.quantity) === 'number') && { quantity: req.body.quantity }
+                                                        }
+                                                        pro.date_last_updated = new Date().toLocaleString();
+                                                        if (req.body.quantity != undefined && typeof (req.body.quantity) !== 'number') {
+                                                            return next(new ErrorResponse('Quantity should be a number', 400));
+                                                        }
                                                         Product.update(
-                                                            req.body
+                                                            pro
                                                             , { returning: true, where: { id: req.params.id } }
                                                         ).then(
                                                             rows => {
