@@ -26,7 +26,7 @@
 - Clone the repository
 - Run npm install
 - Run npm test
-  Run npm start
+- Run npm start
 - Open postman and test
 
 ## API's
