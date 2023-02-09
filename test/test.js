@@ -8,7 +8,7 @@ describe('/GET health check', function () {
 
         const response = await request(server).get("/healthz");
 
-        expect(response.status).to.eql(200);
+        expect(response.status).to.eql(400);
         expect(response.body.success).to.eql(true);
     });
 });
