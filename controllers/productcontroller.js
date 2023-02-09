@@ -9,40 +9,45 @@ const bcrypt = require("bcrypt");
 exports.addProduct = async (req, res, next) => {
     try {
         if ((!(req.body.name === null || req.body.description === null || req.body.sku === null || req.body.manufacturer === null || req.body.quantity === null)) && (req.body.quantity && typeof (req.body.quantity) === "number")) {
-            let auths = req.headers.authorization;
+            if (req.body.name && req.body.description && req.body.sku && req.body.manufacturer && req.body.quantity) {
+                let auths = req.headers.authorization;
 
-            if (!auths) {
-                return next(new ErrorResponse('User should provide authentication', 400));
+                if (!auths) {
+                    return next(new ErrorResponse('User should provide authentication', 400));
+                }
+
+                let auth = new Buffer.from(auths.split(' ')[1], 'base64').toString().split(':');
+                let username = auth[0];
+                let password = auth[1];
+
+                User.findOne({ where: { username: username } }).then(
+                    user => {
+                        bcrypt.compare(password, user.password).then(
+                            flag => {
+                                if (flag) {
+                                    req.body.owner_user_id = user.id;
+                                    req.body.date_added = new Date().toLocaleString();
+                                    req.body.date_last_updated = new Date().toLocaleString();
+                                    Product.create(req.body).then(
+                                        product => {
+                                            res.status(201).json(product);
+                                        }
+                                    ).catch(err => {
+                                        return next(err);
+                                    })
+                                } else {
+                                    return next(new ErrorResponse('User authentication failed, wrong password', 401));
+                                }
+                            }
+                        )
+                    }
+                ).catch(err => {
+                    return next(new ErrorResponse('failed to add product, please try again later', 400));
+                })
+            } else {
+                return next(new ErrorResponse('failed to add product, please re-check all the fields!', 400));
             }
 
-            let auth = new Buffer.from(auths.split(' ')[1], 'base64').toString().split(':');
-            let username = auth[0];
-            let password = auth[1];
-
-            User.findOne({ where: { username: username } }).then(
-                user => {
-                    bcrypt.compare(password, user.password).then(
-                        flag => {
-                            if (flag) {
-                                req.body.owner_user_id = user.id;
-                                req.body.date_added = new Date().toLocaleString();
-                                req.body.date_last_updated = new Date().toLocaleString();
-                                Product.create(req.body).then(
-                                    product => {
-                                        res.status(201).json(product);
-                                    }
-                                ).catch(err => {
-                                    return next(err);
-                                })
-                            } else {
-                                return next(new ErrorResponse('User authentication failed, wrong password', 401));
-                            }
-                        }
-                    )
-                }
-            ).catch(err => {
-                return next(new ErrorResponse('failed to add product, please try again later', 400));
-            })
         } else {
             return next(new ErrorResponse('failed to add product, please re-check all the fields!', 400));
         }
@@ -148,7 +153,7 @@ exports.updateProduct = async (req, res, next) => {
                                                             , { returning: true, where: { id: req.params.id } }
                                                         ).then(
                                                             rows => {
-                                                                console.log('!!!!!!!!!!!!ROWSSSS', rows);
+
                                                                 if (rows) {
                                                                     res.status(204).json({
                                                                         success: true
@@ -230,7 +235,7 @@ exports.updateEntireProduct = async (req, res, next) => {
                                                             , { returning: true, where: { id: req.params.id } }
                                                         ).then(
                                                             rows => {
-                                                                console.log('!!!!!!!!!!!!ROWSSSS', rows);
+
                                                                 if (rows) {
                                                                     res.status(204).json({
                                                                         success: true
