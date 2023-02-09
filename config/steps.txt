@@ -1,5 +1,0 @@
-----------------------------------------
--> npm i express
--> npm i cors
--> npm i -g sequelize-cli
--> npm i sequelize
