@@ -1,4 +1,4 @@
-# Assignment - 1
+# Assignment - 2
 
 ## GOAL
 
@@ -6,10 +6,11 @@
 
 ## Features
 
-- As a developer, I should be able to create an user by providing all the details
-- As a developer, I should be able to update update an user by providing all the details
-- As a developer, I should be able to fetch an user by providing his ID
-- As a developer, I should implement authorization for PUT and GET calls using basic authorization
+- As a developer, I should be able to add a product for a user by providing all the details
+- As a developer, I should be able to update an user's product by providing all the details
+- As a developer, I should be able to delete an user's product by providing product ID
+- As a developer, I should be able to fetch an user's product by providing product ID
+- As a developer, I should implement authorization for PUT,POST,PATCH and GET calls using basic authorization
 
 ## Requirements
 
@@ -26,19 +27,19 @@
 - Clone the repository
 - Run npm install
 - Run npm test
-  Run npm start
+- Run npm start
 - Open postman and test
 
 ## API's
 
-- create new user
-  POST /v1/user
+- add new product
+  POST /v1/product
 
-- fetch user by id
-  GET /v1/user/:id
+- fetch product by id
+  GET /v1/product/:id
 
-- update user by id
-  PUT /v1/user/:id
+- update product by id
+  PUT/PATCH /v1/product/:id
 
-- Health check
-  GET /healthz
+- delete product by id
+  DELETE /v1/product/:id
