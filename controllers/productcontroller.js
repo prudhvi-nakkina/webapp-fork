@@ -93,6 +93,8 @@ exports.deleteProduct = async (req, res, next) => {
                                             }).catch(err => {
                                                 return next(new ErrorResponse('Error in product deletion, please try again later', 400));
                                             })
+                                    } else if (!p) {
+                                        return next(new ErrorResponse('Product does not exists', 404));
                                     } else {
                                         return next(new ErrorResponse('User cannot access other user product', 403));
                                     }
@@ -177,6 +179,8 @@ exports.updateProduct = async (req, res, next) => {
                                                         return next(new ErrorResponse('User cannot update owner id', 403));
                                                     }
 
+                                                } else if (!p) {
+                                                    return next(new ErrorResponse('Product does not exists', 404));
                                                 } else {
                                                     return next(new ErrorResponse('User cannot access other user product', 403));
                                                 }
@@ -259,6 +263,8 @@ exports.updateEntireProduct = async (req, res, next) => {
                                                         return next(new ErrorResponse('User cannot update owner id', 403));
                                                     }
 
+                                                } else if (!p) {
+                                                    return next(new ErrorResponse('Product does not exists', 404));
                                                 } else {
                                                     return next(new ErrorResponse('User cannot access other user product', 403));
                                                 }
@@ -319,6 +325,8 @@ exports.getProduct = async (req, res, next) => {
                                 p => {
                                     if (p && user.id == p.owner_user_id) {
                                         res.status(200).json(p);
+                                    } else if (!p) {
+                                        return next(new ErrorResponse('Product does not exists', 404));
                                     }
                                     else {
                                         return next(new ErrorResponse('User cannot access other user product', 403));
