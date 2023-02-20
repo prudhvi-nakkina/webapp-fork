@@ -25,7 +25,7 @@ build {
   sources = ["source.amazon-ebs.amazon-linux-2"]
 
   provisioner "file" {
-    source = "../webapp.zip"
+    source = "./webapp.zip"
     destination = "/home/ec2-user/webapp.zip"
   }
 
