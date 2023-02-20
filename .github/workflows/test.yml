@@ -13,12 +13,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "14.x"
+      - name: Zip all files
+        run: zip -r webapp.zip .
       - name: Install dependencies
         run: npm install
       - name: Run test
         run: npm test
-      - name: Zip all files
-        run: zip -r webapp.zip .
       - name: Setup `packer`
         uses: hashicorp/setup-packer@main
         id: setup
