@@ -27,5 +27,5 @@ jobs:
       - name: Validate Packer template
         run: packer validate -var-file="variables.auto.pkvars.hcl" .
       - name: Run Packer
-        if: github.event_name == 'push'
+        if: github.event.action == 'closed' && github.event.pull_request.merged == true
         run: packer build -var-file="variables.auto.pkvars.hcl" .
