@@ -28,4 +28,4 @@ jobs:
         run: packer validate packer-file.pkr.hcl
       - name: Run Packer
         if: github.event_name == 'push'
-        run: packer build packer-file.pkr.hcl
+        run: packer build -var-file="variables.auto.pkvars.hcl" .
