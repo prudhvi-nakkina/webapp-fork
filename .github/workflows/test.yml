@@ -25,7 +25,7 @@ jobs:
         with:
           version: "1.8.3" # or `latest`
       - name: Validate Packer template
-        run: packer validate packer-file.pkr.hcl
+        run: packer validate -var-file="variables.auto.pkvars.hcl" .
       - name: Run Packer
         if: github.event_name == 'push'
         run: packer build -var-file="variables.auto.pkvars.hcl" .
