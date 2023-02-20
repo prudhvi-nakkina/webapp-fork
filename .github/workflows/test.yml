@@ -17,3 +17,15 @@ jobs:
         run: npm install
       - name: Run test
         run: npm test
+      - name: Zip all files
+      run: zip -r webapp.zip .
+      - name: Install Packer
+      run: |
+        wget https://releases.hashicorp.com/packer/1.7.6/packer_1.7.6_linux_amd64.zip
+        unzip packer_1.7.6_linux_amd64.zip
+        sudo mv packer /usr/local/bin/
+      - name: Validate Packer template
+      run: packer validate packer-file.pkr.hcl
+      - name: Run Packer
+      if: github.event_name == 'push'
+      run: packer build packer-file.pkr.hcl
