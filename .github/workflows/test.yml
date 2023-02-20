@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Zip all files
+        run: zip -r webapp.zip .
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
