@@ -1,0 +1,21 @@
+name: buildami
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build-ami:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: "1.8.3" # or `latest`
+      - name: Zip all files
+        run: zip -r webapp.zip .
+      - name: Run Packer
+        if: github.event.action == 'closed' && github.event.pull_request.merged == true
+        run: packer build -var-file="variables.auto.pkvars.hcl" .
