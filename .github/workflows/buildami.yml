@@ -17,5 +17,4 @@ jobs:
       - name: Zip all files
         run: zip -r webapp.zip .
       - name: Run Packer
-        if: github.event.action == 'closed' && github.event.pull_request.merged == true
         run: packer build -var-file="variables.auto.pkvars.hcl" .
