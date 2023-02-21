@@ -21,8 +21,7 @@
     sudo mysql -u root -p$password --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'Leomessi@1!';CREATE DATABASE usersdb;USE usersdb;"
 
     sudo yum install unzip -y
-    cd ~/ && unzip webapp.zip
-    cd ~/webapp && npm i
+    cd ~/ && unzip webapp.zip && npm i
 
     sudo mv /tmp/webapp.service /etc/systemd/system/webapp.service
     sudo systemctl enable webapp.service
