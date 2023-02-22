@@ -17,7 +17,6 @@
     sudo yum install mysql-community-server -y
     sudo systemctl start mysqld.service
     password=$(sudo cat /var/log/mysqld.log | grep "A temporary password" | awk '{print $NF}')
-    echo $password
     sudo mysql -u root -p$password --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'Leomessi@1!';CREATE DATABASE usersdb;USE usersdb;"
 
     sudo yum install unzip -y
