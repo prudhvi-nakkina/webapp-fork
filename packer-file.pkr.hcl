@@ -1,22 +1,25 @@
+locals {
+  timestamp = regex_replace(timestamp(), "[- TZ:]", "")
+}
+
 source "amazon-ebs" "amazon-linux-2" {
-  access_key    = var.aws_access_key
-  secret_key    = var.aws_secret_key
-  ami_name      = "amazon-linux-2-node-mysql-ami"
-  instance_type = "t2.micro"
-  region        = "us-east-1"
+  ami_name      = "${var.ami_name}-${locals.timestamp}"
+  instance_type = var.instance_type
+  region        = var.region
+  profile       = var.profile
   source_ami_filter {
     filters = {
-      name                = "amzn2-ami-hvm-2.*.1-x86_64-gp2"
-      root-device-type    = "ebs"
-      virtualization-type = "hvm"
+      name                = var.ami_filter_name
+      root-device-type    = var.device_type
+      virtualization-type = var.virtual_type
     }
     most_recent = true
-    owners      = ["amazon"]
+    owners      = [var.owner]
   }
-  ami_users = ["285317072413"]
+  ami_users = [var.ami_user]
 
-  ssh_username = "ec2-user"
-  ssh_timeout  = "2h"
+  ssh_username = var.ssh_username
+  ssh_timeout  = var.ssh_timeout
 
   associate_public_ip_address = true
 }

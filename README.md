@@ -21,6 +21,10 @@
 - As a developer, I should be able to fetch an user's product by providing product ID
 - As a developer, I should implement authorization for PUT,POST,PATCH and GET calls using basic authorization
 
+## Assignment-4 features
+
+- As a developer, I should be able to build an AMI image post merge
+
 ## Requirements
 
 - Node.js
@@ -30,6 +34,7 @@
 - Chai
 - Supertest
 - Postman
+- Packer
 
 ## Steps to run the project
 

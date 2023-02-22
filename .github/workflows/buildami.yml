@@ -16,5 +16,11 @@ jobs:
           version: "1.8.3" # or `latest`
       - name: Zip all files
         run: zip -r webapp.zip .
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
       - name: Run Packer
         run: packer build -var-file="variables.auto.pkvars.hcl" .
