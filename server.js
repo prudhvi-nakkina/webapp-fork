@@ -14,7 +14,7 @@ app.use(cors());
 
 app.use(express.json());
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'dev') {
     app.use(morgan('dev'));
 }
 

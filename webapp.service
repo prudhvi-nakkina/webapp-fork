@@ -4,7 +4,7 @@ After=cloud-final.service
 
 [Service]
 WorkingDirectory=/home/ec2-user/webapp
-ExecStart=/usr/bin/node /home/ec2-user/webapp/listener.js
+ExecStart=/bin/bash -c 'sudo source /home/ec2-user/.bash_profile && /usr/bin/node /home/ec2-user/webapp/listener.js'
 Restart=always
 RestartSec=10
 StandardOutput=syslog
