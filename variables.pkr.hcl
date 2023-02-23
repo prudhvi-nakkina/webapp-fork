@@ -30,10 +30,6 @@ variable "ssh_username" {
     type = string
 }
 
-variable "ssh_username" {
-    type = string
-}
-
 variable "ssh_timeout" {
     type = string
 }
