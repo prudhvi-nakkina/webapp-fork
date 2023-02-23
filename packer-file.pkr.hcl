@@ -7,6 +7,9 @@ source "amazon-ebs" "amazon-linux-2" {
   instance_type = var.instance_type
   region        = var.region
   profile       = var.profile
+  tags = {
+    Name = "${var.ami_name}-${local.timestamp}"
+  }
   source_ami_filter {
     filters = {
       name                = var.ami_filter_name
