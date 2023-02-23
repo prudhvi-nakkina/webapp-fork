@@ -15,4 +15,4 @@ DB_PASSWORD="Leomessi@1!"
 DB_DIALECT="mysql"
 PORT=5000
 DB="usersdb"
-DB_HOST=127.0.0.1
+DB_HOST="127.0.0.1"
