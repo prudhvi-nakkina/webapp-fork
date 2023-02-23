@@ -1,71 +1,71 @@
 variable "instance_type" {
-    type = string
+  type = string
 }
 
 variable "region" {
-    type = string
+  type = string
 }
 
 variable "profile" {
-    type = string
+  type = string
 }
 
 variable "ami_filter_name" {
-    type = string
+  type = string
 }
 
 variable "device_type" {
-    type = string
+  type = string
 }
 
 variable "virtual_type" {
-    type = string
+  type = string
 }
 
 variable "ami_name" {
-    type = string
+  type = string
 }
 
 variable "ssh_username" {
-    type = string
+  type = string
 }
 
 variable "ssh_timeout" {
-    type = string
+  type = string
 }
 
 variable "ami_user" {
-    type = string
+  type = string
 }
 
 variable "owner" {
-    type = string
+  type = string
 }
 
 variable "NODE_ENV" {
-    type = string
+  type = string
 }
 
 variable "DB_USERNAME" {
-    type = string
+  type = string
 }
 
 variable "DB_PASSWORD" {
-    type = string
+  type = string
 }
 
 variable "DB_DIALECT" {
-    type = string
+  type = string
 }
 
 variable "DB" {
-    type = string
+  type = string
 }
 
 variable "PORT" {
-    type = number
+  type = number
 }
 
 variable "DB_HOST" {
-    type = string
+  type = string
 }
