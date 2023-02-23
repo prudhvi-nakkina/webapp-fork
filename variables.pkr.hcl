@@ -67,5 +67,5 @@ variable "PORT" {
 }
 
 variable "DB_HOST" {
-    type = number
+    type = string
 }
