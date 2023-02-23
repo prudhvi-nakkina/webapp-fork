@@ -31,12 +31,12 @@ build {
   sources = ["source.amazon-ebs.amazon-linux-2"]
 
   provisioner "file" {
-    source = "./webapp.zip"
+    source      = "./webapp.zip"
     destination = "/home/ec2-user/webapp.zip"
   }
 
   provisioner "file" {
-    source = "./webapp.service"
+    source      = "./webapp.service"
     destination = "/tmp/webapp.service"
   }
 
