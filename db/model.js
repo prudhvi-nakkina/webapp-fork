@@ -13,12 +13,14 @@ const sequelize = new Sequelize(
     }
 );
 
-sequelize.authenticate().then(() => {
-    console.log('Connection has been established successfully.');
-}).catch((error) => {
-    console.error('Unable to connect to the database: ', error);
-});
+if (process.env.NODE_ENV === 'dev') {
+    sequelize.authenticate().then(() => {
+        console.log('Connection has been established successfully.');
+    }).catch((error) => {
+        console.error('Unable to connect to the database: ', error);
+    });
 
+}
 exports.User = sequelize.define("user", {
     id: {
         type: DataTypes.INTEGER,
@@ -91,8 +93,10 @@ exports.Product = sequelize.define("product", {
     timestamps: false
 });
 
-sequelize.sync().then(() => {
-    console.log('User table created successfully!');
-}).catch((error) => {
-    console.error('Unable to create table : ', error);
-});
+if (process.env.NODE_ENV === 'dev') {
+    sequelize.sync().then(() => {
+        console.log('User table created successfully!');
+    }).catch((error) => {
+        console.error('Unable to create table : ', error);
+    });
+}
