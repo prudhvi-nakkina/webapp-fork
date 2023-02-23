@@ -42,13 +42,13 @@ build {
 
   provisioner "shell" {
     inline = [
-      "echo 'export NODE_ENV=$NODE_ENV' >> ~/.bash_profile",
-      "echo 'export DB_USERNAME=$DB_USERNAME' >> ~/.bash_profile",
-      "echo 'export DB_PASSWORD=$DB_PASSWORD' >> ~/.bash_profile",
-      "echo 'export DB_DIALECT=$DB_DIALECT' >> ~/.bash_profile",
-      "echo 'export PORT=$PORT' >> ~/.bash_profile",
-      "echo 'export DB=$DB' >> ~/.bash_profile",
-      "echo 'export DB_HOST=$DB_HOST' >> ~/.bash_profile",
+      "echo 'export NODE_ENV=\"${var.NODE_ENV}\"' >> ~/.bash_profile",
+      "echo 'export DB_USERNAME=\"${DB_USERNAME}\"' >> ~/.bash_profile",
+      "echo 'export DB_PASSWORD=\"${DB_PASSWORD}\"' >> ~/.bash_profile",
+      "echo 'export DB_DIALECT=\"${DB_DIALECT}\"' >> ~/.bash_profile",
+      "echo 'export PORT=${PORT}' >> ~/.bash_profile",
+      "echo 'export DB=\"${DB}\"' >> ~/.bash_profile",
+      "echo 'export DB_HOST=\"${DB_HOST}\"' >> ~/.bash_profile",
       "source ~/.bash_profile"
     ]
   }
