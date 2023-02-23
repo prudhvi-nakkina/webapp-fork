@@ -3,7 +3,7 @@ locals {
 }
 
 source "amazon-ebs" "amazon-linux-2" {
-  ami_name      = "${var.ami_name}-${locals.timestamp}"
+  ami_name      = "${var.ami_name}-${local.timestamp}"
   instance_type = var.instance_type
   region        = var.region
   profile       = var.profile
