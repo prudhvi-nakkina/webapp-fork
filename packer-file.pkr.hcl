@@ -54,6 +54,6 @@ build {
   }
 
   provisioner "shell" {
-    script = "install-s.sh
+    script = "install-s.sh"
   }
 }
