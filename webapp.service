@@ -4,15 +4,13 @@ After=cloud-final.service
 
 [Service]
 EnvironmentFile=/home/ec2-user/.env
-WorkingDirectory=/home/ec2-user/webapp
-# ExecStart=/bin/bash -c 'source /home/ec2-user/.bash_profile && /usr/bin/node /home/ec2-user/webapp/listener.js'
-ExecStart=/usr/bin/node /home/ec2-user/webapp/listener.js
-Restart=always
-RestartSec=10
-StandardOutput=syslog
-StandardError=syslog
-SyslogIdentifier=webapp-app
+Type=simple
 User=ec2-user
+ExecStart=/usr/bin/node /home/ec2-user/listener.js
+# Restart=on-failure
+Restart=always
+RestartSec=500ms
+StartLimitInterval=0
 
 [Install]
 WantedBy=multi-user.target
