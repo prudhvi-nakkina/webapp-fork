@@ -30,7 +30,7 @@ exports.uploadImage = async (req, res, next) => {
                                 p => {
                                     if (p && user.id == p.owner_user_id) {
 
-                                        AWS.config.update({ region: 'us-east-1' });
+                                        AWS.config.update({ region: process.env.AWS_REGION });
 
                                         // Create S3 service object
                                         const s3 = new AWS.S3({ apiVersion: '2006-03-01' });
@@ -296,7 +296,7 @@ exports.deleteImage = async (req, res, next) => {
                                                     Key: i.file_name
                                                 }
 
-                                                AWS.config.update({ region: 'us-east-1' });
+                                                AWS.config.update({ region: process.env.AWS_REGION });
 
                                                 // Create S3 service object
                                                 const s3 = new AWS.S3({ apiVersion: '2006-03-01' });
