@@ -9,7 +9,14 @@ const sequelize = new Sequelize(
     process.env.DB_PASSWORD,
     {
         host: process.env.DB_HOST,
-        dialect: process.env.DB_DIALECT || 'mysql'
+        port: process.env.DB_PORT,
+        dialect: process.env.DB_DIALECT,
+        maxConcurrentQueries: 100,
+        dialectOptions: {
+            ssl: 'Amazon RDS'
+        },
+        pool: { maxConnections: 5, maxIdleTime: 30 },
+        language: 'en'
     }
 );
 
@@ -92,6 +99,54 @@ exports.Product = sequelize.define("product", {
 }, {
     timestamps: false
 });
+
+exports.Image = sequelize.define('image', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    ETag: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    ContentLength: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    ContentType: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    VersionId: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    ServerSideEncryption: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    LastModified: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    date_created: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    file_name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    product_id: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    s3_bucket_path: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+})
 
 if (process.env.NODE_ENV === 'dev') {
     sequelize.sync().then(() => {

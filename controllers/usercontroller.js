@@ -56,7 +56,7 @@ exports.getUser = asyncHandler(async (req, res, next) => {
     let authenticateHeader = req.headers.authorization;
 
     if (!authenticateHeader) {
-        return next(new ErrorResponse('User should provide authentication', 400));
+        return next(new ErrorResponse('User should provide authentication', 401));
     }
 
     let auth = new Buffer.from(authenticateHeader.split(' ')[1],
@@ -86,7 +86,7 @@ exports.getUser = asyncHandler(async (req, res, next) => {
                         }
                     })
                     .catch(err => {
-                        return next(new ErrorResponse('User authentication failed, please try again later', 400));
+                        return next(new ErrorResponse('User authentication failed, please try again later', 401));
                     }
                     )
             } else {
@@ -94,7 +94,7 @@ exports.getUser = asyncHandler(async (req, res, next) => {
             }
         }
     ).catch(err => {
-        return next(new ErrorResponse('User authentication failed, please try again later', 400));
+        return next(new ErrorResponse('User authentication failed, please try again later', 401));
     });
 
 })

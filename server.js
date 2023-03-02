@@ -4,6 +4,7 @@ const routes = require('./routes/userroutes');
 const errorhandler = require('./middleware/errorhandler');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const bodyParser = require('body-parser')
 
 // load env vars
 dotenv.config({ path: './config/config.env' });
@@ -11,6 +12,8 @@ dotenv.config({ path: './config/config.env' });
 const app = express();
 
 app.use(cors());
+
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.json());
 
