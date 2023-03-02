@@ -1,4 +1,4 @@
-# Assignment - 2
+# Assignment - 5
 
 ## GOAL
 
@@ -25,6 +25,13 @@
 
 - As a developer, I should be able to build an AMI image post merge
 
+## Assignment-5 features
+
+- As a User, I should be able to upload images to the products I have created
+- As a User, I should be able to delete only my own images from the products they I created
+- As a User, I should not be able to delete images uploaded by other users or from products created by other users.
+- As a developer, I must ensure the partitioning user's images in the object storage bucket.
+
 ## Requirements
 
 - Node.js
@@ -43,6 +50,20 @@
 - Run npm test
 - Run npm start
 - Open postman and test
+
+## Assignment-5 API's
+
+- upload new Image
+  POST /v1/product/:id/image
+
+- get all images
+  GET /v1/product/:id/image
+
+- get image by id
+  GET /v1/product/:pid/image/:id
+
+- delete image by id
+  DELETE /v1/product/:pid/image/:id
 
 ## Assignment-2 API's
 

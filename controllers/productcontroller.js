@@ -42,7 +42,7 @@ exports.addProduct = async (req, res, next) => {
                         )
                     }
                 ).catch(err => {
-                    return next(new ErrorResponse('failed to add product, please try again later', 400));
+                    return next(new ErrorResponse('User authentication failed', 401));
                 })
             } else {
                 return next(new ErrorResponse('failed to add product, please re-check all the fields!', 400));
