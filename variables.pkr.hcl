@@ -41,31 +41,3 @@ variable "ami_user" {
 variable "owner" {
   type = string
 }
-
-variable "NODE_ENV" {
-  type = string
-}
-
-variable "DB_USERNAME" {
-  type = string
-}
-
-variable "DB_PASSWORD" {
-  type = string
-}
-
-variable "DB_DIALECT" {
-  type = string
-}
-
-variable "DB" {
-  type = string
-}
-
-variable "PORT" {
-  type = number
-}
-
-variable "DB_HOST" {
-  type = string
-}
