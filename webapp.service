@@ -3,8 +3,10 @@ Description=Web App
 After=cloud-final.service
 
 [Service]
+EnvironmentFile=/home/ec2-user/.env
 WorkingDirectory=/home/ec2-user/webapp
-ExecStart=/bin/bash -c 'source /home/ec2-user/.bash_profile && /usr/bin/node /home/ec2-user/webapp/listener.js'
+# ExecStart=/bin/bash -c 'source /home/ec2-user/.bash_profile && /usr/bin/node /home/ec2-user/webapp/listener.js'
+ExecStart=/usr/bin/node /home/ec2-user/webapp/listener.js
 Restart=always
 RestartSec=10
 StandardOutput=syslog
