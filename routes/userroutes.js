@@ -3,6 +3,9 @@ const express = require('express');
 const { createUser, getUser, updateUser } = require('../controllers/usercontroller');
 const { checkHealth } = require('../controllers/healthcontroller');
 const { addProduct, deleteProduct, updateProduct, updateEntireProduct, getProduct } = require('../controllers/productcontroller');
+const { uploadImage, getImage, getAllImages, deleteImage } = require('../controllers/uploadcontroller')
+const upload = require('../middleware/multerfile')
+
 const router = express.Router();
 
 router
@@ -28,5 +31,13 @@ router
     .patch(updateProduct)
     .put(updateEntireProduct)
     .get(getProduct);
+
+router.route('/v1/product/:id/image')
+    .get(getAllImages)
+    .post(upload.single('image'), uploadImage);
+
+router.route('/v1/product/:pid/image/:id')
+    .get(getImage)
+    .delete(deleteImage)
 
 module.exports = router;

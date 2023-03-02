@@ -13,7 +13,7 @@ exports.addProduct = async (req, res, next) => {
                 let auths = req.headers.authorization;
 
                 if (!auths) {
-                    return next(new ErrorResponse('User should provide authentication', 400));
+                    return next(new ErrorResponse('User should provide authentication', 401));
                 }
 
                 let auth = new Buffer.from(auths.split(' ')[1], 'base64').toString().split(':');
@@ -68,7 +68,7 @@ exports.deleteProduct = async (req, res, next) => {
         let auth = req.headers.authorization;
 
         if (!auth) {
-            return next(new ErrorResponse('User should provide authentication', 400));
+            return next(new ErrorResponse('User should provide authentication', 401));
         }
 
         let authorization = new Buffer.from(auth.split(' ')[1], 'base64').toString().split(':');
@@ -107,13 +107,13 @@ exports.deleteProduct = async (req, res, next) => {
                         }
                     }
                 ).catch(err => {
-                    return next(new ErrorResponse('User authentication failed', 400));
+                    return next(new ErrorResponse('User authentication failed', 401));
                 })
 
             }
         ).catch(
             err => {
-                return next(new ErrorResponse('User authentication failed', 400));
+                return next(new ErrorResponse('User authentication failed', 401));
             }
         )
 
@@ -193,7 +193,7 @@ exports.updateProduct = async (req, res, next) => {
                                     }
                                 }
                             ).catch(err => {
-                                return next(new ErrorResponse('User authentication failed', 400));
+                                return next(new ErrorResponse('User authentication failed', 401));
                             })
                         } else {
                             return next(new ErrorResponse('Product update failed, invalid fields!', 400));
@@ -277,7 +277,7 @@ exports.updateEntireProduct = async (req, res, next) => {
                                     }
                                 }
                             ).catch(err => {
-                                return next(new ErrorResponse('User authentication failed', 400));
+                                return next(new ErrorResponse('User authentication failed', 401));
                             })
                         } else {
                             return next(new ErrorResponse('Product update failed, invalid fields!', 400));
@@ -308,7 +308,7 @@ exports.getProduct = async (req, res, next) => {
         let auth = req.headers.authorization;
 
         if (!auth) {
-            return next(new ErrorResponse('User should provide authentication', 400));
+            return next(new ErrorResponse('User should provide authentication', 401));
         }
 
         let authorization = new Buffer.from(auth.split(' ')[1], 'base64').toString().split(':');
@@ -340,13 +340,13 @@ exports.getProduct = async (req, res, next) => {
                         }
                     }
                 ).catch(err => {
-                    return next(new ErrorResponse('User authentication failed', 400));
+                    return next(new ErrorResponse('User authentication failed', 401));
                 })
 
             }
         ).catch(
             err => {
-                return next(new ErrorResponse('User authentication failed', 400));
+                return next(new ErrorResponse('User authentication failed', 401));
             }
         )
 
