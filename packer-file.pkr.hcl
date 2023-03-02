@@ -32,21 +32,8 @@ build {
 
   provisioner "file" {
     source      = "./webapp.zip"
-    destination = "/home/ec2-user/webapp.zip"
+    destination = "webapp.zip"
   }
-
-  provisioner "file" {
-    source      = "./webapp.service"
-    destination = "/tmp/webapp.service"
-  }
-
-  // provisioner "shell" {
-  //   inline = [
-  //     "echo 'export NODE_ENV=\"${var.NODE_ENV}\"' >> ~/.bash_profile",
-  //     "echo 'export PORT=${var.PORT}' >> ~/.bash_profile",
-  //     "source ~/.bash_profile"
-  //   ]
-  // }
 
   provisioner "shell" {
     script = "install-s.sh"
