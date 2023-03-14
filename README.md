@@ -64,6 +64,7 @@
 
 - delete image by id
   DELETE /v1/product/:pid/image/:id
+  
 
 ## Assignment-2 API's
 
