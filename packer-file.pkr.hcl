@@ -38,4 +38,15 @@ build {
   provisioner "shell" {
     script = "install-s.sh"
   }
+
+  provisioner "file" {
+    source      = "config.json"
+    destination = "/tmp/config.json"
+  }
+
+  provisioner "shell" {
+    inline = [
+      "sudo yum install -y https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm"
+    ]
+  }
 }

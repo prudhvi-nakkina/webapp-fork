@@ -1,6 +1,12 @@
 const { User, Product } = require('../db/model');
 const ErrorResponse = require('../util/errorResponse');
 const bcrypt = require("bcrypt");
+var logger = require('../middleware/logger');
+const StatsD = require('hot-shots')
+const client = new StatsD({
+    host: 'localhost',
+    port: 8125
+});
 
 // @desc    add new product
 // @route   POST /v1/product
@@ -8,6 +14,7 @@ const bcrypt = require("bcrypt");
 
 exports.addProduct = async (req, res, next) => {
     try {
+        client.increment('addProduct-requests');
         if ((!(req.body.name === null || req.body.description === null || req.body.sku === null || req.body.manufacturer === null || req.body.quantity === null)) && (req.body.quantity && typeof (req.body.quantity) === "number")) {
             if (req.body.name && req.body.description && req.body.sku && req.body.manufacturer && req.body.quantity) {
                 let auths = req.headers.authorization;
@@ -31,6 +38,7 @@ exports.addProduct = async (req, res, next) => {
                                     Product.create(req.body).then(
                                         product => {
                                             res.status(201).json(product);
+                                            logger.info('POST /v1/product - Product created')
                                         }
                                     ).catch(err => {
                                         return next(err);
@@ -65,6 +73,7 @@ exports.addProduct = async (req, res, next) => {
 
 exports.deleteProduct = async (req, res, next) => {
     try {
+        client.increment('deleteProduct-requests');
         let auth = req.headers.authorization;
 
         if (!auth) {
@@ -90,6 +99,7 @@ exports.deleteProduct = async (req, res, next) => {
                                                 res.status(204).json({
                                                     success: true
                                                 })
+                                                logger.info('DELETE /v1/product/:id - Product deleted')
                                             }).catch(err => {
                                                 return next(new ErrorResponse('Error in product deletion, please try again later', 400));
                                             })
@@ -126,6 +136,7 @@ exports.deleteProduct = async (req, res, next) => {
 exports.updateProduct = async (req, res, next) => {
     try {
 
+        client.increment('updateProduct-Patch-requests');
         let authenticateHeader = req.headers.authorization;
 
         if (!authenticateHeader) {
@@ -170,6 +181,7 @@ exports.updateProduct = async (req, res, next) => {
                                                                     res.status(204).json({
                                                                         success: true
                                                                     });
+                                                                    logger.info('PATCH /v1/product/:id - Product updated')
                                                                 }
                                                             }
                                                         ).catch(err => {
@@ -220,6 +232,7 @@ exports.updateProduct = async (req, res, next) => {
 exports.updateEntireProduct = async (req, res, next) => {
     try {
 
+        client.increment('updateProdct-PUT-requests');
         let authenticateHeader = req.headers.authorization;
 
         if (!authenticateHeader) {
@@ -254,6 +267,7 @@ exports.updateEntireProduct = async (req, res, next) => {
                                                                     res.status(204).json({
                                                                         success: true
                                                                     });
+                                                                    logger.info('PUT /v1/product/:id - Product updated')
                                                                 }
                                                             }
                                                         ).catch(err => {
@@ -305,6 +319,7 @@ exports.getProduct = async (req, res, next) => {
 
     try {
 
+        client.increment('getProduct-requests');
         let auth = req.headers.authorization;
 
         if (!auth) {
@@ -325,6 +340,7 @@ exports.getProduct = async (req, res, next) => {
                                 p => {
                                     if (p && user.id == p.owner_user_id) {
                                         res.status(200).json(p);
+                                        logger.info('GET /v1/product/:id - Product fetched')
                                     } else if (!p) {
                                         return next(new ErrorResponse('Product does not exists', 404));
                                     }

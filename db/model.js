@@ -1,4 +1,5 @@
 const { Sequelize, DataTypes, STRING } = require("sequelize");
+var logger = require('winston');
 
 const dotenv = require('dotenv');
 dotenv.config({ path: './config/config.env' });
@@ -23,8 +24,10 @@ const sequelize = new Sequelize(
 if (process.env.NODE_ENV === 'dev') {
     sequelize.authenticate().then(() => {
         console.log('Connection has been established successfully.');
+        logger.info('Connection has been established successfully.');
     }).catch((error) => {
         console.error('Unable to connect to the database: ', error);
+        logger.error('Unable to connect to the database');
     });
 
 }
@@ -151,7 +154,9 @@ exports.Image = sequelize.define('image', {
 if (process.env.NODE_ENV === 'dev') {
     sequelize.sync().then(() => {
         console.log('User table created successfully!');
+        logger.info('User table created successfully!');
     }).catch((error) => {
         console.error('Unable to create table : ', error);
+        logger.error('Unable to create table : ', error);
     });
 }

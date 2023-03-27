@@ -4,11 +4,18 @@ const AWS = require('aws-sdk');
 const { User, Product, Image } = require('../db/model');
 const ErrorResponse = require('../util/errorResponse');
 const bcrypt = require("bcrypt");
+var logger = require('../middleware/logger');
+const StatsD = require('hot-shots')
+const client = new StatsD({
+    host: 'localhost',
+    port: 8125
+});
 
 exports.uploadImage = async (req, res, next) => {
 
     try {
 
+        client.increment('uploadImage-requests');
         let auth = req.headers.authorization;
 
         if (!auth) {
@@ -83,6 +90,7 @@ exports.uploadImage = async (req, res, next) => {
                                                                         s3_bucket_path: i.s3_bucket_path
                                                                     }
                                                                 );
+                                                                logger.info('POST /v1/product/:id/image - Image uploaded')
                                                             }
                                                         ).catch(err => {
                                                             return next(err);
@@ -129,6 +137,7 @@ exports.getImage = async (req, res, next) => {
 
     try {
 
+        client.increment('getImage-requests');
         let auth = req.headers.authorization;
 
         if (!auth) {
@@ -162,6 +171,7 @@ exports.getImage = async (req, res, next) => {
                                                 const arr = []
                                                 arr.push(image);
                                                 res.status(200).json(arr);
+                                                logger.info('GET /v1/product/:id/image/:id - Image fetched')
                                             }
                                         ).catch(err => {
                                             return next(new ErrorResponse('Image does not exist for given product', 404));
@@ -199,6 +209,7 @@ exports.getImage = async (req, res, next) => {
 exports.getAllImages = async (req, res, next) => {
     try {
 
+        client.increment('getAllImages-requests');
         let auth = req.headers.authorization;
 
         if (!auth) {
@@ -232,6 +243,7 @@ exports.getAllImages = async (req, res, next) => {
                                                     });
                                                 }
                                                 res.status(200).json(arr);
+                                                logger.info('GET /v1/product/:id/image - Images fetched')
                                             }
                                         ).catch(err => {
                                             return next(new ErrorResponse('Image does not exists for given product', 404));
@@ -268,6 +280,7 @@ exports.getAllImages = async (req, res, next) => {
 exports.deleteImage = async (req, res, next) => {
     try {
 
+        client.increment('deleteImage-requests');
         let auth = req.headers.authorization;
 
         if (!auth) {
@@ -307,6 +320,7 @@ exports.deleteImage = async (req, res, next) => {
                                                             res.status(204).json({
                                                                 success: true
                                                             })
+                                                            logger.info('DELETE /v1/product/:id/image/:id - Image deleted')
                                                         }).catch(err => {
                                                             return next(new ErrorResponse('Error in product deletion, please try again later', 400));
                                                         })

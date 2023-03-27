@@ -2,11 +2,19 @@ const asyncHandler = require('../middleware/async');
 const { User } = require('../db/model');
 const bcrypt = require("bcrypt");
 const ErrorResponse = require('../util/errorResponse');
+var logger = require('../middleware/logger');
+const StatsD = require('hot-shots')
+const client = new StatsD({
+    host: 'localhost',
+    port: 8125
+});
 
 // @desc    create new user
 // @route   POST /v1/user
 // @access  Private
 exports.createUser = asyncHandler(async (req, res, next) => {
+
+    client.increment('createUser-requests');
 
     // check if existing user, if email exists send 400
     if (!(req.body.first_name === null || req.body.username === null || req.body.last_name === null || req.body.password === null)) {
@@ -22,6 +30,8 @@ exports.createUser = asyncHandler(async (req, res, next) => {
                                 req.body.password = hash;
                                 const user = await User.create(req.body);
 
+                                logger.info('POST /v1/user - user successfully created')
+
                                 res.status(201).json({
                                     id: user.id,
                                     first_name: user.first_name,
@@ -31,19 +41,23 @@ exports.createUser = asyncHandler(async (req, res, next) => {
                                     account_updated: user.updatedAt
                                 }
                                 );
+                                logger.info('POST /v1/user - user successfully created')
                             });
                         });
                     } else {
+                        logger.error('POST /v1/user - invalid username')
                         return next(new ErrorResponse('username should be a valid email', 400));
                     }
                 }
             }
         ).catch(
             err => {
+                logger.error('POST /v1/user - error in fetching user from DB')
                 return next(new ErrorResponse('Error in user creation, please re-check all the fields!', 400));
             }
         )
     } else {
+        logger.error('POST /v1/user - error in input fields')
         return next(new ErrorResponse('Error in user creation, please re-check all the fields!', 400));
     }
 });
@@ -52,6 +66,8 @@ exports.createUser = asyncHandler(async (req, res, next) => {
 // @route   GET /v1/user/:id
 // @access  Private
 exports.getUser = asyncHandler(async (req, res, next) => {
+
+    client.increment('getUser-requests');
 
     let authenticateHeader = req.headers.authorization;
 
@@ -80,20 +96,25 @@ exports.getUser = asyncHandler(async (req, res, next) => {
                                     account_created: user.createdAt,
                                     account_updated: user.updatedAt
                                 })
+                                logger.info('GET /v1/user/:id - User fetched successfully')
                             })
                         } else {
+                            logger.error('GET /v1/user/:id - User authentication failed, wrong password')
                             return next(new ErrorResponse('User authentication failed, wrong password', 401));
                         }
                     })
                     .catch(err => {
+                        logger.error('GET /v1/user/:id - Error in bcrypt password validation')
                         return next(new ErrorResponse('User authentication failed, please try again later', 401));
                     }
                     )
             } else {
+                logger.error('GET /v1/user/:id - Unauthorized access by user')
                 return next(new ErrorResponse('User cannot access other user info', 403));
             }
         }
     ).catch(err => {
+        logger.error('GET /v1/user/:id - Error in fetching user from DB')
         return next(new ErrorResponse('User authentication failed, please try again later', 401));
     });
 
@@ -103,6 +124,8 @@ exports.getUser = asyncHandler(async (req, res, next) => {
 // @route   PUT /v1/user/:id
 // @access  Private
 exports.updateUser = asyncHandler(async (req, res, next) => {
+
+    client.increment('updateUser-requests');
     let authenticateHeader = req.headers.authorization;
 
     if (!authenticateHeader) {
@@ -136,14 +159,17 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
                                                     res.status(204).json({
                                                         success: true
                                                     });
+                                                    logger.info('PUT /v1/user/:id - successfully updated user')
                                                 }
                                             });
                                         });
                                     } else {
+                                        logger.error('PUT /v1/user/:id - failed attempt by user, wrong password')
                                         return next(new ErrorResponse('User authentication failed, wrong password', 401));
                                     }
                                 }
                                 ).catch(err => {
+                                    logger.error('PUT /v1/user/:id - Error in bcrypt password validation')
                                     return next(new ErrorResponse('User authentication failed, please try again later', 401));
                                 });
                         } else {
