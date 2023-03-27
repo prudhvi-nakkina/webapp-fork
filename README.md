@@ -1,4 +1,4 @@
-# Assignment - 6
+# Assignment - 7
 
 ## GOAL
 
@@ -32,6 +32,12 @@
 - As a User, I should not be able to delete images uploaded by other users or from products created by other users.
 - As a developer, I must ensure the partitioning user's images in the object storage bucket.
 
+## Assignment-7 features
+
+- As a user, I want all application log data to be available in CloudWatch.
+- As a user, I want metrics on API usage available in CloudWatch.
+- As a developer, I can log metrics using statsd
+
 ## Requirements
 
 - Node.js
@@ -64,7 +70,6 @@
 
 - delete image by id
   DELETE /v1/product/:pid/image/:id
-  
 
 ## Assignment-2 API's
 
