@@ -18,6 +18,8 @@ exports.checkHealth = asyncHandler((req, res, next) => {
         success: true,
         data: "Health Check Successful"
     });
-    logger.info('Health Check Successful')
+    if (process.env.NODE_ENV === 'dev') {
+        logger.info('Health Check Successful')
+    }
 
 });
