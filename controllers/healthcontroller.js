@@ -1,6 +1,6 @@
 const asyncHandler = require('../middleware/async');
 const StatsD = require('hot-shots')
-var logger = require('winston');
+var logger = require('../middleware/logger');
 const AWS = require('aws-sdk');
 // @desc    health check
 // @route   GET /healthz
