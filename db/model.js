@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes, STRING } = require("sequelize");
-var logger = require('winston');
+var logger = require('../middleware/logger');
 
 const dotenv = require('dotenv');
 dotenv.config({ path: './config/config.env' });
