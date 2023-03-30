@@ -1,4 +1,4 @@
-const { User, Product } = require('../db/model');
+const { User, Product, Image } = require('../db/model');
 const ErrorResponse = require('../util/errorResponse');
 const bcrypt = require("bcrypt");
 var logger = require('../middleware/logger');
@@ -15,8 +15,8 @@ const client = new StatsD({
 exports.addProduct = async (req, res, next) => {
     try {
         client.increment('addProduct-requests');
-        if ((!(req.body.name === null || req.body.description === null || req.body.sku === null || req.body.manufacturer === null || req.body.quantity === null)) && (req.body.quantity && typeof (req.body.quantity) === "number")) {
-            if (req.body.name && req.body.description && req.body.sku && req.body.manufacturer && req.body.quantity) {
+        if ((!(req.body.name === null || req.body.description === null || req.body.sku === null || req.body.manufacturer === null || req.body.quantity === null)) && (typeof (req.body.quantity) === "number")) {
+            if (req.body.name && req.body.description && req.body.sku && req.body.manufacturer && req.body.quantity != null) {
                 let auths = req.headers.authorization;
 
                 if (!auths) {
@@ -96,10 +96,38 @@ exports.deleteProduct = async (req, res, next) => {
                                     if (p && user.id == p.owner_user_id) {
                                         Product.destroy({ where: { id: req.params.id } }).then(
                                             r => {
-                                                res.status(204).json({
-                                                    success: true
-                                                })
-                                                logger.info('DELETE /v1/product/:id - Product deleted')
+
+                                                Image.findAll({ where: { product_id: req.params.id }, raw: true }).then(
+                                                    images => {
+                                                        AWS.config.update({ region: process.env.AWS_REGION });
+
+                                                        // Create S3 service object
+                                                        const s3 = new AWS.S3({ apiVersion: '2006-03-01' });
+                                                        for (i of images) {
+                                                            const params = {
+                                                                Bucket: process.env.S3,
+                                                                Key: i.file_name
+                                                            }
+
+                                                            s3.deleteObject(params).promise().then(result => {
+                                                                Image.destroy({ where: { id: i.id } }).then(
+                                                                    r => {
+                                                                        logger.info('DELETE /v1/product/:id/image/:id - Image deleted')
+                                                                    }).catch(err => {
+                                                                        return next(new ErrorResponse('Error in product deletion, please try again later', 400));
+                                                                    })
+                                                            }).catch(err => {
+                                                                return next(new ErrorResponse('Error in deleting from bucket', 404));
+                                                            })
+                                                        }
+                                                        res.status(204).json({
+                                                            success: true
+                                                        })
+                                                        logger.info('DELETE /v1/product/:id - Product deleted')
+                                                    }
+                                                ).catch(err => {
+                                                    return next(new ErrorResponse('Image does not exists for given product', 404));
+                                                });
                                             }).catch(err => {
                                                 return next(new ErrorResponse('Error in product deletion, please try again later', 400));
                                             })
@@ -151,7 +179,7 @@ exports.updateProduct = async (req, res, next) => {
         User.findOne({ where: { username: username } }).then(
             user => {
                 if (!(req.body.name === null || req.body.description === null || req.body.sku === null || req.body.manufacturer === null || req.body.quantity === null)) {
-                    if (req.body.name || req.body.description || req.body.sku || req.body.manufacturer || req.body.quantity) {
+                    if (req.body.name || req.body.description || req.body.sku || req.body.manufacturer || req.body.quantity != null) {
                         if (!(req.body.date_added || req.body.date_last_updated || req.body.owner_user_id)) {
                             bcrypt.compare(password, user.password).then(
                                 flag => {
@@ -165,10 +193,10 @@ exports.updateProduct = async (req, res, next) => {
                                                             ...(req.body.description) && { description: req.body.description },
                                                             ...(req.body.sku) && { sku: req.body.sku },
                                                             ...(req.body.manufacturer) && { manufacturer: req.body.manufacturer },
-                                                            ...(req.body.quantity && typeof (req.body.quantity) === 'number') && { quantity: req.body.quantity }
+                                                            ...(req.body.quantity != null && typeof (req.body.quantity) === 'number') && { quantity: req.body.quantity }
                                                         }
                                                         pro.date_last_updated = new Date().toLocaleString();
-                                                        if (req.body.quantity != undefined && typeof (req.body.quantity) !== 'number') {
+                                                        if (req.body.quantity != null && typeof (req.body.quantity) !== 'number') {
                                                             return next(new ErrorResponse('Quantity should be a number', 400));
                                                         }
                                                         Product.update(
@@ -247,7 +275,7 @@ exports.updateEntireProduct = async (req, res, next) => {
         User.findOne({ where: { username: username } }).then(
             user => {
                 if (!(req.body.name === null || req.body.description === null || req.body.sku === null || req.body.manufacturer === null || req.body.quantity === null) && (typeof (req.body.quantity) === "number")) {
-                    if (req.body.name && req.body.description && req.body.sku && req.body.manufacturer && req.body.quantity) {
+                    if (req.body.name && req.body.description && req.body.sku && req.body.manufacturer && req.body.quantity != null) {
                         if (!(req.body.date_added || req.body.date_last_updated || req.body.owner_user_id)) {
                             bcrypt.compare(password, user.password).then(
                                 flag => {
