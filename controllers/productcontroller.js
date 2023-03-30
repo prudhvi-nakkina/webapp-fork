@@ -7,6 +7,7 @@ const client = new StatsD({
     host: 'localhost',
     port: 8125
 });
+const AWS = require('aws-sdk');
 
 // @desc    add new product
 // @route   POST /v1/product
