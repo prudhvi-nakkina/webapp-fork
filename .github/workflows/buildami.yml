@@ -29,4 +29,4 @@ jobs:
       - name: Run Packer
         run: packer build -var-file="variables.auto.pkvars.hcl" .
       - name: Run script
-        run: ./CD.sh
+        run: bash CD.sh
