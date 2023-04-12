@@ -16,7 +16,7 @@ else
   # New version number for the launch template
   VERSION=$(aws ec2 describe-launch-template-versions --region $REGION --launch-template-name $LAUNCH_TEMPLATE_NAME --query 'max_by(LaunchTemplateVersions, &VersionNumber).VersionNumber' --output text)
   NEW_VERSION=$(($(aws ec2 describe-launch-template-versions --region $REGION --launch-template-name $LAUNCH_TEMPLATE_NAME --query 'max_by(LaunchTemplateVersions, &VersionNumber).VersionNumber' --output text) + 1))
-  AMI_ID=$(aws ec2 describe-images --owners amazon --filters "Name=name,Values=amzn2-ami-hvm-2.0.*.1-x86_64-gp2" "Name=state,Values=available" "Name=architecture,Values=x86_64" "Name=virtualization-type,Values=hvm" --query "reverse(sort_by(Images, &CreationDate))[0].ImageId" --region us-east-1 --output text)
+  AMI_ID=$(aws ec2 describe-images --owners self --filters "Name=name,Values=amazon*" --query 'sort_by(Images, &CreationDate)[-1].ImageId')
 #   ASG_ID=$(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names $AUTO_SCALING_GROUP_NAME --query "AutoScalingGroups[0].AutoScalingGroupARN | split(':')[-1]" --output text)
   LAUNCH_TEMPLATE_ID=$(aws ec2 describe-launch-templates --region $REGION --launch-template-names $LAUNCH_TEMPLATE_NAME --query 'LaunchTemplates[0].LaunchTemplateId' --output text)
 
