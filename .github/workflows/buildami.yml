@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
 
+env:
+  LAUNCH_TEMPLATE: ${{ secrets.LAUNCH_TEMPLATE }}
+  ASG: ${{ secrets.ASG }}
+
 jobs:
   build-ami:
     runs-on: ubuntu-latest
@@ -24,3 +28,5 @@ jobs:
           aws-region: us-east-1
       - name: Run Packer
         run: packer build -var-file="variables.auto.pkvars.hcl" .
+      - name: Run script
+        run: ./CD.sh
