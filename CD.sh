@@ -25,6 +25,6 @@ else
   # Update the auto scaling group with the new launch template version
   aws autoscaling update-auto-scaling-group --region $REGION --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME --launch-template "LaunchTemplateId=$LAUNCH_TEMPLATE_ID,Version=$NEW_VERSION"
 
-  # Trigger an instance refresh in the auto scaling grou
+  # Trigger an instance refresh in the auto scaling group
   aws autoscaling start-instance-refresh --region $REGION --auto-scaling-group-name $AUTO_SCALING_GROUP_NAME --preferences '{"InstanceWarmup":300,"MinHealthyPercentage":50}'
 fi
