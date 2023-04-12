@@ -13,7 +13,7 @@ router
     .get(checkHealth);
 
 router
-    .route('/dummyhealthz')
+    .route('/dummyhealth')
     .get(dummyCheckHealth)
 
 router
