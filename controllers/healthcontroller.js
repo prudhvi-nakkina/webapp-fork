@@ -20,3 +20,19 @@ exports.checkHealth = asyncHandler((req, res, next) => {
     });
     logger.info('Health Check Successful');
 });
+
+exports.dummyCheckHealth = asyncHandler((req, res, next) => {
+
+    const client = new StatsD({
+        host: 'localhost',
+        port: 8125
+    });
+
+    client.increment('dummy-healthz-requests');
+
+    res.status(200).json({
+        success: true,
+        data: "Dummy Health Check Successful"
+    });
+    logger.info('Dummy Health Check Successful');
+});
