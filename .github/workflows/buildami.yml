@@ -4,10 +4,6 @@ on:
   push:
     branches: [main]
 
-env:
-  LAUNCH_TEMPLATE: ${{ secrets.LAUNCH_TEMPLATE }}
-  ASG: ${{ secrets.ASG }}
-
 jobs:
   build-ami:
     runs-on: ubuntu-latest

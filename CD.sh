@@ -1,18 +1,11 @@
 #!/bin/bash
-
+REGION=us-east-1
+LAUNCH_TEMPLATE_NAME=$(aws ec2 describe-launch-templates --region $REGION --query 'sort_by(LaunchTemplates, &CreationTime)[-1].LaunchTemplateName' --output text)
+AUTO_SCALING_GROUP_NAME=$(aws autoscaling describe-auto-scaling-groups --query 'AutoScalingGroups[].AutoScalingGroupName' --output text | sort -r | head -n 1)
 # Check if DB_USERNAME_SECRET and DB_PASSWORD_SECRET secrets are set
-if [[ -z "${LAUNCH_TEMPLATE}" || -z "${ASG}" ]]; then
+if [[ ! -z "${LAUNCH_TEMPLATE_NAME}" || ! -z "${AUTO_SCALING_GROUP_NAME}" ]]; then
   echo "Required secrets not set. Aborting script."
 else
-  # AWS region where the launch template is located
-  REGION=us-east-1
-
-  # Name of the launch template to update
-  LAUNCH_TEMPLATE_NAME="${LAUNCH_TEMPLATE}"
-
-  # ID of the auto scaling group associated with the launch template
-  AUTO_SCALING_GROUP_NAME="${ASG}"
-
   # New version number for the launch template
   VERSION=$(aws ec2 describe-launch-template-versions --region $REGION --launch-template-name $LAUNCH_TEMPLATE_NAME --query 'max_by(LaunchTemplateVersions, &VersionNumber).VersionNumber' --output text)
   NEW_VERSION=$(($(aws ec2 describe-launch-template-versions --region $REGION --launch-template-name $LAUNCH_TEMPLATE_NAME --query 'max_by(LaunchTemplateVersions, &VersionNumber).VersionNumber' --output text) + 1))
