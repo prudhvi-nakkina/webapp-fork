@@ -1,9 +1,9 @@
 #!/bin/bash
 REGION=us-east-1
-LAUNCH_TEMPLATE_NAME=$(aws ec2 describe-launch-templates --region $REGION --query 'sort_by(LaunchTemplates, &CreationTime)[-1].LaunchTemplateName' --output text)
+LAUNCH_TEMPLATE_NAME=$(aws ec2 describe-launch-templates --query 'LaunchTemplates[].LaunchTemplateName' --output text | sort -r | head -n 1)
 AUTO_SCALING_GROUP_NAME=$(aws autoscaling describe-auto-scaling-groups --query 'AutoScalingGroups[].AutoScalingGroupName' --output text | sort -r | head -n 1)
 # Check if DB_USERNAME_SECRET and DB_PASSWORD_SECRET secrets are set
-if [[ ! -z "${LAUNCH_TEMPLATE_NAME}" || ! -z "${AUTO_SCALING_GROUP_NAME}" ]]; then
+if [[ -z "${LAUNCH_TEMPLATE_NAME}" || "${AUTO_SCALING_GROUP_NAME}"==null ]]; then
   echo "Required secrets not set. Aborting script."
 else
   # New version number for the launch template
