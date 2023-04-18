@@ -41,7 +41,7 @@
 ## Assignment-8 features
 
 - As a developer, I can implement continuous delivery by refreshing launch template
-- As a developer, I can implement ssl encryption
+- As a developer, I can implement ssl encryption for website
 
 ## Requirements
 
