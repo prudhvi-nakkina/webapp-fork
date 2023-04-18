@@ -26,7 +26,7 @@ router
     .put(updateUser);
 
 router
-    .route('/v1/product')
+    .route('/v5/product')
     .post(addProduct);
 
 router
