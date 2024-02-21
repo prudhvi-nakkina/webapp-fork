@@ -1,8 +1,35 @@
-# Assignment - 9
+# Cloud-Native E-Commerce Inventory Management System
 
-## GOAL
+This project showcases the design and implementation of a secure, scalable Node.js e-commerce backend with various features:
 
-### The goal of this assignment is to implement a backend server with multiple Api's and implement CI with github actions
+- Authenticated REST APIs for seamless user interactions.
+- Robust user management system.
+- Efficient product management functionality.
+- Image storage capabilities using AWS S3.
+
+## Project Highlights:
+
+- **AWS Deployment:**
+  - Deployed the application on an AWS EC2 instance, ensuring accessibility and scalability.
+
+- **Infrastructure as Code (IaC) with Terraform:**
+  - Automated infrastructure provisioning on AWS using Terraform.
+  - Provisioned resources include EC2 instances, S3 buckets, EBS volumes, RDS databases, IAM roles/policies, Auto Scaling, and security groups.
+  - Ensured secure communication and access control through well-defined infrastructure.
+
+- **Dynamic Workload Scaling:**
+  - Implemented dynamic workload scaling with autoscaling based on custom metrics.
+  - Integrated an application load balancer with custom health checks for high availability.
+
+- **Domain Hosting with Route53:**
+  - Hosted the application on a custom domain using Route53, ensuring a professional and branded user experience.
+
+- **CI/CD with GitHub Actions:**
+  - Orchestrated seamless CI/CD using GitHub Actions.
+  - Automated test-driven development, custom AMI creation, and cloud resource updates.
+  - Ensured code quality and enabled fast deployments with Instance Refresh upon every merge.
+
+This project demonstrates best practices in Cloud-Native development, emphasizing security, scalability, and efficient CI/CD workflows.
 
 ## Features
 
